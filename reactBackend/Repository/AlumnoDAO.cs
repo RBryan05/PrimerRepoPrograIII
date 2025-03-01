@@ -140,5 +140,63 @@ namespace reactBackend.Repository
             return listadoALumno.ToList();
         }
         #endregion
+
+        #region AlumnoDNI
+        public Alumno DNIAlumno(Alumno alumno)
+        {
+            var alumnos = contexto.Alumnos.Where(x => x.Dni == alumno.Dni).FirstOrDefault();
+            return alumnos == null ? null : alumnos;
+        }
+        #endregion
+
+        #region AlumnoMatricula
+        public bool InsertarMatricula(Alumno alumno, int idAsing)
+        {
+            try
+            {
+                var alumnoDNI = DNIAlumno(alumno);
+                if (alumnoDNI == null)
+                {
+                    InsertAlumno(alumno);
+                    var alumnoInsertado = DNIAlumno(alumno); // Recuperamos el alumno con el ID generado
+
+                    if (alumnoInsertado == null)
+                        return false; // Evitamos errores si el alumno no se insertó correctamente
+
+                    var unirAlumnoMatricula = matriculaAsignaturaALumno(alumnoInsertado, idAsing);
+                    return unirAlumnoMatricula; // Devolvemos el resultado de la matrícula
+                }
+                else
+                {
+                    return matriculaAsignaturaALumno(alumnoDNI, idAsing);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en InsertarMatricula: {ex.Message}");
+                return false;
+            }
+        }
+        #endregion
+
+        #region Matriucla
+        public bool matriculaAsignaturaALumno(Alumno alumno, int idAsignatura)
+        {
+            try
+            {
+                Matricula matricula = new Matricula();
+                matricula.AlumnoId = alumno.Id;
+                matricula.AsignaturaId = idAsignatura;
+                contexto.Matriculas.Add(matricula);
+                contexto.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+        #endregion
     }
 }

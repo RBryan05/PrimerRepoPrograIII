@@ -35,5 +35,13 @@ namespace WebAPI.Controllers
             return _alDAO.UpdateAlumno(alum.Id, alum);
         }
         #endregion
+
+        #region AlumnoMAtricula
+        [HttpPost("alumno")]
+        public bool InsertarMatricula([FromBody] Alumno alumno, int idAsignatura)
+        {
+            return _alDAO.InsertarMatricula(alumno, idAsignatura);
+        }
+        #endregion
     }
 }
