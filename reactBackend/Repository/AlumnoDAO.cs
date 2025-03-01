@@ -11,13 +11,13 @@ namespace reactBackend.Repository
     public class AlumnoDAO
     {
         #region Context
-        public RegistroAlumnosContext contecxto = new RegistroAlumnosContext();
+        public RegistroAlumnosContext contexto = new RegistroAlumnosContext();
         #endregion
 
         #region SelectAll
         public List<Alumno> SelectAll()
         {
-            var alumno = contecxto.Alumnos.ToList<Alumno>();
+            var alumno = contexto.Alumnos.ToList<Alumno>();
             return alumno;
         }
         #endregion
@@ -25,7 +25,7 @@ namespace reactBackend.Repository
         #region GetByID
         public Alumno GetByID(int id)
         {
-            var alumno = contecxto.Alumnos.Where(x => x.Id == id).FirstOrDefault();
+            var alumno = contexto.Alumnos.Where(x => x.Id == id).FirstOrDefault();
             return alumno == null ? null : alumno;
         }
         #endregion
@@ -43,8 +43,8 @@ namespace reactBackend.Repository
                     Correo = alumno.Correo
                 };
 
-                contecxto.Alumnos.Add(alum);
-                contecxto.SaveChanges();
+                contexto.Alumnos.Add(alum);
+                contexto.SaveChanges();
                 return true;
             }
             catch (Exception ex)
@@ -69,7 +69,7 @@ namespace reactBackend.Repository
                 alumnoUpdate.Dni = alumno.Dni;
                 alumnoUpdate.Direccion = alumno.Direccion;
                 alumnoUpdate.Correo = alumno.Correo;
-                contecxto.SaveChanges();
+                contexto.SaveChanges();
                 return true;
             }
             catch (Exception e)
@@ -91,8 +91,8 @@ namespace reactBackend.Repository
                     return false;
                 }
 
-                contecxto.Alumnos.Remove(alumno);
-                contecxto.SaveChanges();
+                contexto.Alumnos.Remove(alumno);
+                contexto.SaveChanges();
                 return true;
             }
             catch (Exception e)
@@ -106,9 +106,9 @@ namespace reactBackend.Repository
         #region LeftJoin
         public List<AlumnoAsignatura> GetAlumnoAsignatura()
         {
-            var query = from a in contecxto.Alumnos
-                        join m in contecxto.Matriculas on a.Id equals m.AlumnoId
-                        join asig in contecxto.Asignaturas on m.AsignaturaId equals asig.Id
+            var query = from a in contexto.Alumnos
+                        join m in contexto.Matriculas on a.Id equals m.AlumnoId
+                        join asig in contexto.Asignaturas on m.AsignaturaId equals asig.Id
                         select new AlumnoAsignatura
                         {
                             nombreAlumno = a.Nombre,
@@ -116,6 +116,28 @@ namespace reactBackend.Repository
                         };
 
             return query.ToList();
+        }
+        #endregion
+
+        #region AlumnoProfesor
+        public List<AlumnoProfesor> AlumnoProfesors(string nombreProfesor)
+        {
+            var listadoALumno = from a in contexto.Alumnos
+                                join m in contexto.Matriculas on a.Id equals m.AlumnoId
+                                join asig in contexto.Asignaturas on m.AsignaturaId equals asig.Id
+                                where asig.Profesor == nombreProfesor
+                                select new AlumnoProfesor
+                                {
+                                    Id = a.Id,
+                                    Dni = a.Dni,
+                                    Nombre = a.Nombre,
+                                    Direccion = a.Direccion,
+                                    Edad = a.Edad,
+                                    Correo = a.Correo,
+                                    Asignatura = asig.Nombre
+                                };
+
+            return listadoALumno.ToList();
         }
         #endregion
     }
