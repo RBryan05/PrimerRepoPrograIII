@@ -29,5 +29,78 @@ namespace reactBackend.Repository
             return alumno == null ? null : alumno;
         }
         #endregion
+
+        #region InsertAlumno
+        public bool InsertAlumno(Alumno alumno)
+        {
+            try
+            {
+                var alum = new Alumno()
+                {
+                    Nombre = alumno.Nombre,
+                    Dni = alumno.Dni,
+                    Direccion = alumno.Direccion,
+                    Correo = alumno.Correo
+                };
+
+                contecxto.Alumnos.Add(alum);
+                contecxto.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        #endregion
+
+        #region UpdateAlumno
+        public bool UpdateAlumno(int id, Alumno alumno)
+        {
+            try
+            {
+                var alumnoUpdate = GetByID(id);
+                if (alumnoUpdate == null)
+                {
+                    return false;
+                }
+
+                alumnoUpdate.Nombre = alumno.Nombre;
+                alumnoUpdate.Dni = alumno.Dni;
+                alumnoUpdate.Direccion = alumno.Direccion;
+                alumnoUpdate.Correo = alumno.Correo;
+                contecxto.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.InnerException);
+                return false;
+            }
+        }
+        #endregion
+
+        #region DeleteAlumno
+        public bool DeleteAlumno(int id)
+        {
+            try
+            {
+                var alumno = GetByID(id);
+                if (alumno == null)
+                {
+                    return false;
+                }
+
+                contecxto.Alumnos.Remove(alumno);
+                contecxto.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.InnerException);
+                return false;
+            }
+        }
+        #endregion
     }
 }
