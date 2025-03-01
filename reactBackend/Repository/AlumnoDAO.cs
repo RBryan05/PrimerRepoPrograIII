@@ -23,7 +23,7 @@ namespace reactBackend.Repository
         #endregion
 
         #region GetByID
-        public Alumno GetByID(int id)
+        public Alumno? GetByID(int id)
         {
             var alumno = contexto.Alumnos.Where(x => x.Id == id).FirstOrDefault();
             return alumno == null ? null : alumno;
