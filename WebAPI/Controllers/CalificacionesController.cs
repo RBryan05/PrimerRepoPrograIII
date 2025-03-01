@@ -27,6 +27,12 @@ namespace WebAPI.Controllers
         }
         #endregion
 
-
+        #region DeleteCalificaciones
+        [HttpDelete("calificaciones")]
+        public bool DeleteCalificacion(int idCalificacion)
+        {
+            return _cali.EliminarCalificacion(idCalificacion);
+        }
+        #endregion
     }
 }
