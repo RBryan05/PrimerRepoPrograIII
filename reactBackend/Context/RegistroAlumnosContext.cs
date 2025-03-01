@@ -102,7 +102,7 @@ public partial class RegistroAlumnosContext : DbContext
                 .HasConstraintName("FK__Matricula__Alumn__5165187F");
 
             entity.HasOne(d => d.AsignaturaNavigation).WithMany(p => p.Matriculas)
-                .HasForeignKey(d => d.Asignatura)
+                .HasForeignKey(d => d.AsignaturaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Matricula__Asign__52593CB8");
         });

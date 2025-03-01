@@ -12,7 +12,7 @@ namespace Temporal
             var alumnos = alumnoDAO.SelectAll();
             foreach (var alum in alumnos)
             {
-                Console.WriteLine(alum.Nombre);
+                //Console.WriteLine(alum.Nombre);
             }
             #endregion
 
@@ -46,8 +46,16 @@ namespace Temporal
             #endregion
 
             #region DeleteAlumno
-            var resultadoDelete = alumnoDAO.DeleteAlumno(11);
-            Console.WriteLine("Se elimino " + resultadoDelete);
+            //var resultadoDelete = alumnoDAO.DeleteAlumno(11);
+            //Console.WriteLine("Se elimino " + resultadoDelete);
+            #endregion
+
+            #region AlumnoAsignatura desde un JOIN
+            var alumnoAsignatura = alumnoDAO.GetAlumnoAsignatura();
+            foreach (var item in alumnoAsignatura)
+            {
+                Console.WriteLine(item.nombreAlumno + " | Asignatura que cursa => " + item.nombreAsignatura);
+            }
             #endregion
         }
     }

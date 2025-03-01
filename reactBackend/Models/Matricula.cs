@@ -9,7 +9,7 @@ public partial class Matricula
 
     public int AlumnoId { get; set; }
 
-    public int Asignatura { get; set; }
+    public int AsignaturaId { get; set; }
 
     public virtual Alumno Alumno { get; set; } = null!;
 
