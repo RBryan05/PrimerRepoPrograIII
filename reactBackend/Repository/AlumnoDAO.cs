@@ -85,20 +85,37 @@ namespace reactBackend.Repository
         {
             try
             {
-                var alumno = GetByID(id);
-                if (alumno == null)
+                // Debemos verificar el id del alumno
+                var alumno = contexto.Alumnos.Where(x => x.Id == id).FirstOrDefault();
+                if (alumno != null)
                 {
+                    // matriculaAlumno == idALumno
+                    var matriculaA = contexto.Matriculas.Where(x => x.AlumnoId == alumno.Id).ToList();
+                    Console.WriteLine("Alumno  encontrado");
+                    //Traemos la calificaciones asociadas a esa matricula 
+                    foreach (Matricula m in matriculaA)
+                    {
+                        var calificacion = contexto.Calificacions.Where(x => x.MatriculaId == m.Id).ToList();
+                        Console.WriteLine("Matricula encontrada");
+                        contexto.Calificacions.RemoveRange(calificacion);
+
+                    }
+                    contexto.Matriculas.RemoveRange(matriculaA);
+                    contexto.Alumnos.Remove(alumno);
+                    contexto.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Alumno no encontrado");
                     return false;
                 }
-
-                contexto.Alumnos.Remove(alumno);
-                contexto.SaveChanges();
-                return true;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.InnerException);
+                Console.WriteLine(ex.Message);
                 return false;
+
             }
         }
         #endregion
@@ -163,12 +180,12 @@ namespace reactBackend.Repository
                     if (alumnoInsertado == null)
                         return false; // Evitamos errores si el alumno no se insertó correctamente
 
-                    var unirAlumnoMatricula = matriculaAsignaturaALumno(alumnoInsertado, idAsing);
+                    var unirAlumnoMatricula = MatriculaAsignaturaALumno(alumnoInsertado, idAsing);
                     return unirAlumnoMatricula; // Devolvemos el resultado de la matrícula
                 }
                 else
                 {
-                    return matriculaAsignaturaALumno(alumnoDNI, idAsing);
+                    return MatriculaAsignaturaALumno(alumnoDNI, idAsing);
                 }
             }
             catch (Exception ex)
@@ -180,7 +197,7 @@ namespace reactBackend.Repository
         #endregion
 
         #region Matriucla
-        public bool matriculaAsignaturaALumno(Alumno alumno, int idAsignatura)
+        public bool MatriculaAsignaturaALumno(Alumno alumno, int idAsignatura)
         {
             try
             {
@@ -198,5 +215,7 @@ namespace reactBackend.Repository
             }
         }
         #endregion
+
+        
     }
 }
